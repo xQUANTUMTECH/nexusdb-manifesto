@@ -60,10 +60,11 @@ NexusDB simulates quantum entanglement through **Quantum Correlation Recording**
 
 NexusDB is designed to operate in total isolation, ensuring maximum privacy and cloud-independent performance.
 
-### 3.1 Local Embedder and Offline Inference
-Thanks to the `src/embed/local.rs` integration, NexusDB can utilize embedding models (e.g., BGE-M3, Nemotron) via **ONNX Runtime** or **TensorRT** directly on local CPU/GPU hardware.
-- **Zero Latency**: Eliminates external API bottlenecks.
-- **Total Privacy**: Sensitive data never leaves the user's infrastructure perimeter.
+### 3.1 Extreme Efficiency and Local Inference
+Thanks to its optimized architecture, NexusDB operates with near-zero resource consumption:
+- **Zero-RAM Overhead**: Leverages kernel-level `mmap` (memory mapping) to map cartridges directly from disk. RAM is only occupied by active memory pages, allowing massive databases (100k+ pages) to run on machines with minimal RAM.
+- **GPU-Agnostic**: Designed for high-performance execution even on CPU alone, making it ideal for Edge devices, smartphones, and standard hardware.
+- **Total Privacy**: Complete independence from internet and external APIs; data never leaves the user's perimeter.
 
 ### 3.2 The .nxm Cartridge Generator: Scaling to 100k+ Pages
 NexusDB is not just a database; it is a **Competency Factory**. It is capable of processing hundreds of thousands of pages, condensing them into optimized `.nxm` cartridges.
@@ -139,4 +140,5 @@ NexusDB creates a self-improving loop that outperforms static cloud providers:
 
 **NexusDB is not a warehouse. It is a brain.** It is the connective tissue that turns raw data into portable, evolving expertise.
 
-© 2025 xQuantumTech. All rights reserved. Registered under AGPL-3.0.
+© 2025-2026 xQuantumTech. All rights reserved.
+Lead Developer: **Maurizio Tarricone**
