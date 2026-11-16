@@ -1,144 +1,75 @@
-# NexusDB — Beyond Vector: The Cognitive Memory Engine Manifesto
+# NexusDB — An Accessory Brain for Any AI Model
 
-## Executive Summary
+*X Quantum Tech FZE LLC · November 2026 · Italian version: [MANIFESTO_COGNITIVO_NEXUSDB.md](MANIFESTO_COGNITIVO_NEXUSDB.md)*
 
-NexusDB represents a fundamental paradigm shift in the architecture of long-term memory for Artificial General Intelligence (AGI). Moving beyond the static limitations of traditional Vector Databases (e.g., Pinecone, Milvus, Qdrant), NexusDB implements a **Cognitive Memory Engine** based on **Hebbian Synaptic Plasticity** and a **DNA-Φ Quantum-Inspired Manifold**.
+> “NexusDB” is a working name. It is not the NexusDB database for Delphi (nexusdb.com); the final product name will be chosen before launch.
 
-By re-engineering the retrieval layer to behave as a plastic, self-wiring neural network rather than a fixed geometric index, NexusDB resolves the "Anterograde Amnesia" of current Large Language Models (LLMs), enabling continuous learning, cross-domain associative reasoning, and modular expertise distribution through the `.nxm` (Nexus Memory) format.
+## 1. The problem
 
----
+Every organization wants its AI to know its people, prices, rules and procedures — and to stay current. The three tools available today each break somewhere:
 
-## 1. The Biological Paradigm: Connective Intelligence
+- **Instruction files** (`.md`, prompts) are static text pasted into every request. Cost grows with every page, past a few dozen pages they no longer fit, and they never learn which answer was right.
+- **Fine-tuning** freezes knowledge into weights. It is costly, redone at every change, unavailable on closed API models — and in our tests it made a model stop citing its sources.
+- **Vendor memory** lives inside one assistant: opaque, tied to that vendor, focused on facts and preferences rather than procedures, and lost when you change model.
 
-Traditional Retrieval-Augmented Generation (RAG) relies on mathematically inert archives. Data is embedded, indexed (HNSW), and retrieved via static distance metrics. This ignores the primary principle of organic intelligence: **adaptation through utility**.
+What is missing is a memory that belongs to the customer, works with any model and learns how the work is done.
 
-### 1.1 Hebbian Synaptic Plasticity
-NexusDB implements the Hebbian principle: *"Neurons that fire together, wire together."* The retrieval graph is not a fixed HNSW structure but a dynamic topology that evolves based on query patterns.
+## 2. The idea
 
-- **Long-Term Potentiation (LTP)**: When distinct semantic regions or nodes are co-activated by complex queries, the engine reinforces the synaptic weights (edges) connecting them.
-- **Long-Term Depression (LTD)**: Inactive connections and noise undergo temporal decay, maintaining the sparsity and efficiency of the index.
-- **Hebb-Sutton Update Rule**: The weight adjustment $\Delta w_{ij}$ between nodes $i$ and $j$ follows a modified associative learning rule:
-  $$\Delta w_{ij} = \eta (a_i a_j - w_{ij})$$
-  where $\eta$ is the learning rate and $a_i, a_j$ are the activation levels during retrieval.
+The model is the cortex: general language and reasoning, identical for every customer. What makes a professional valuable is different — remembering what happened, knowing which step comes next, turning repeated work into habit. In the brain those are separate systems. In AI they should be separate, portable and owned.
 
-### 1.2 Elastic Anchoring & Topologies
-To prevent **Semantic Drift** (Catastrophic Forgetting), NexusDB utilizes **Elastic Anchoring**. The base coordinates provided by the Foundation Model (e.g., Nemotron, OpenAI) act as gravitational anchors, while Hebbian weights act as flexible springs. The final retrieval score is a normalized fusion of base similarity and learned associative weight.
+A NexusDB **cartridge** is one portable file (`.nxm`) that sits beside any model, open or closed, small or large. It holds:
 
----
+1. **Knowledge** — documents and work history with hybrid search (semantic + keyword) and exact source citations. *In the Rust engine.*
+2. **Experience** — every verified answer becomes a new way in to its source, used only when a new question is similar enough (a similarity gate), reversible, per customer. *In the Rust engine.*
+3. **Learned mini-brains** — small networks (1–3M parameters, CPU, trained from use in seconds) that decide where to look and what comes next. *Measured in the lab; next engine integration.*
+4. **Reranking** — a second pass over the first 50 candidates. *Measured in the lab; next engine integration.*
 
-## 2. Geometric Foundation: The DNA-Φ Quantum Manifold
+The cartridge learns the roads between the facts, not new facts. The model stays unchanged, so the experience survives a change of model or vendor.
 
-NexusDB replaces flat Euclidean space with a **4D Quantum-Inspired Manifold** modeled after biological DNA structure. This geometry allows for non-local correlations and hierarchical routing that Euclidean models cannot achieve.
+## 3. What we measured (November 2026)
 
-### 2.1 The Double Helix Duality (Strand 1 & 2)
-Knowledge is mapped onto a dual-strand topology that reflects the natural symmetry of complex systems:
+Demo-scale evidence: single rented GPUs, open models of 1–4 billion parameters, a two-person core team.
 
-| Axis | Strand 1: Structural/Invariant | Strand 2: Dynamic/Operational |
-| :--- | :--- | :--- |
-| **Differentiator** | *What it IS* (Core Principles, Definitions) | *What it DOES* (Processes, Consequences) |
-| **Legal** | Constitutional Articles, Statutory Definitions | Jurisprudence, Penalties, Procedures |
-| **Medical** | Anatomy, Physiological Principles | Therapies, Drug Interactions, Prognosis |
-| **Software** | System Architecture, Interface Contracts | Runtime Events, Execution Traces, Side-Effects |
+| ID | Claim | Result | Test |
+|---|---|---|---|
+| E1 | A small model with our search matches frontier models | 69.6% vs 68.6–71.0% | 400 questions, blind judge; Gemma 3 4B vs four frontier models given the same cartridge with standard search |
+| E2 | No training beats fine-tuning, same model | +32.6 vs +8.9 points | Gemma 3 1B: cartridge with no training vs fine-tuning on all passages |
+| E3 | Learns from verified use, no retraining | +11.2 points (48.1 → 59.4%) | 26,682 passages, unseen wordings, 3 seeds; damage on untouched topics −0.4 |
+| E4 | The gain is the system, not the vectors | −29.0 vs −0.4 damage | Ablation: copying past questions as vectors breaks other searches; the gated system does not |
+| E5 | Knows the next step of a procedure | 2.6% → 50.5% | 400 public procedures hidden among 14,627 passages, 3 seeds |
+| E6 | Learned networks beat hand-written rules on real work | +5.2 / +7.1 points | 849 real notes + 823 sessions; 2 splits; thresholds fixed in advance |
+| E7 | Learns by being talked to, with fewer tokens | 71% vs 5% · 4.6× fewer input tokens | Live chat with a 4B model; 8 dialogues vs the whole memory pasted as a file |
+| E9 | Public benchmark LongMemEval | **85.6%** with GPT-4o · 79.6% vs Zep 63.8% with GPT-4o-mini | 500 questions, official judge — every answer public |
 
-### 2.2 Phase Alignment and DNA-Φ Scoring
-Every semantic node possesses a **Complex Phase $w$** (the fourth dimension). Retrieval is governed by a **Quantum Walk** logic:
-- **Resonance**: Nodes with aligned phases produce constructive interference, increasing their rank.
-- **Interference**: Destructive interference (misaligned phases) acts as a high-precision gate, filtering out semantically similar but logically irrelevant contexts.
-- **Scoring Function**:
-  $$S(q, n) = \text{Sim}(q, n) \cdot [0.4 + 0.6 \cdot \cos(\phi_q - \phi_n)]$$
-  where $\phi$ represents the semantic phase of query $q$ and node $n$.
+Full LongMemEval record: **[xquantumtech.com/benchmark/longmemeval](https://xquantumtech.com/benchmark/longmemeval/)** · files: **[nexusdb-longmemeval](https://github.com/xQUANTUMTECH/nexusdb-longmemeval)**.
 
-### 2.3 Entanglement Symmetry: Quantum Correlation Recording
-NexusDB simulates quantum entanglement through **Quantum Correlation Recording** between "Base Pairs" across the two strands (Structure vs Dynamics).
-- **Non-Local Correlation**: When a query simultaneously activates two regions linked by a base pair, the engine reinforces their bond via the `record_quantum_correlation` function.
-- **Strand Jumping**: This allows signals to "jump" instantly between theoretical domains (Strand 1) and operational domains (Strand 2), simulating an instantaneous correlation that transcends pure semantic distance.
-- **Quantum Walk**: Retrieval propagates an "action potential" through the graph, guided by phase alignment and shell proximity, filtering noise with sub-vector precision.
+## 4. How we test
 
----
+- **Thresholds before results.** Pass criteria (minimum gain, maximum damage) are written before each run; failed configurations are reported as failures, not re-tuned on the test.
+- **Never-seen material.** New wordings, questions written by other model families, notes and sessions held out from training; damage always measured on untouched topics.
+- **Repeats and intervals.** Three seeds or two independent splits, 95% confidence intervals, counts of improved vs worsened questions.
+- **Blind, independent judge.** A model that is not a competitor and does not know which system answered.
+- **Negative results kept.** Failed ideas stay in the register.
+- **Independent review.** A separate AI system acted as devil's advocate on the learning code; the defects it found were fixed and the affected numbers re-measured and lowered.
 
-## 3. Local Sovereignty and Massive Scalability
+## 5. Limits we state
 
-NexusDB is designed to operate in total isolation, ensuring maximum privacy and cloud-independent performance.
+- Results are demo-scale; the legal, science and agent suites (E8) are small and early.
+- In E1 the frontier models used standard search; the precise claim is “a 4B model with our search equals frontier models with a standard search”.
+- In E3 the teacher is the verified reference passage; with a fully automatic teacher the gain so far is +5.6 points (1 seed).
+- LongMemEval tests recall from short synthetic chats; systems using newer answer models (e.g. gpt-5-mini) are not comparable with our GPT-4o runs.
+- Our own embedder (67% of bge-m3) and reader are research, not product.
 
-### 3.1 Extreme Efficiency and Local Inference
-Thanks to its optimized architecture, NexusDB operates with near-zero resource consumption:
-- **Zero-RAM Overhead**: Leverages kernel-level `mmap` (memory mapping) to map cartridges directly from disk. RAM is only occupied by active memory pages, allowing massive databases (100k+ pages) to run on machines with minimal RAM.
-- **GPU-Agnostic**: Designed for high-performance execution even on CPU alone, making it ideal for Edge devices, smartphones, and standard hardware.
-- **Total Privacy**: Complete independence from internet and external APIs; data never leaves the user's perimeter.
+## 6. What this manifesto replaces
 
-### 3.2 The .nxm Cartridge Generator: Scaling to 100k+ Pages
-NexusDB is not just a database; it is a **Competency Factory**. It is capable of processing hundreds of thousands of pages, condensing them into optimized `.nxm` cartridges.
-- **Mass Efficiency**: The Blueprint V3 topological segmentation allows for constant retrieval performance (< 15ms) even with shard counts that would far exceed LLM context window limits.
-- **Intelligent Compression**: Utilizes **Product Quantization (PQ)** to minimize the memory footprint, allowing massive "brains" to be loaded in fractions of a second.
+The April 2026 version of this document described a “DNA-Φ quantum-inspired manifold”, phase-based scoring and other mechanisms that were never shown to beat a plain hybrid baseline in an ablation. Those claims are withdrawn. Everything above is measured, with its method and limits.
 
-### 3.3 Super-Specialized Agents: Cartridge Swapping
-This approach enables the near-instant creation of **Autonomous Super-Specialized Agents**.
-- **Expertise On-Demand**: An agent can "swap" its `.nxm` file to transition from a constitutional law expert to a railway technical consultant in milliseconds.
-- **Continuous Evolution**: Every interaction with the agent refines the `.nxm` cartridge through local Hebbian plasticity, making each agent's expertise unique and constantly improving.
+## Contact
 
----
+Maurizio Tarricone — Founder & CEO, X Quantum Tech FZE LLC (UAE)
+ceo@xquantumtech.com · [xquantumtech.com/it/nexusdb](https://xquantumtech.com/it/nexusdb)
 
-## 4. Implementation: Blueprint V3 & Optimization
+The engine is proprietary. Scripts, logs and the full evidence register are available to investors and design partners on request, under NDA.
 
-### 4.1 Two-Level Topological Routing
-To scale to millions of chunks without noise, NexusDB implements **Blueprint V3** routing:
-1. **Skill Discovery**: $O(K)$ search across global centroids to identify relevant knowledge domains.
-2. **Active Region Discovery**: Identification of the top-12 **Blueprint Regions** (clusters) within the selected skills.
-3. **Focused Local Search**: HNSW + BM25 hybrid search restricted to the activated topological neighborhood.
-
-### 3.2 L-BFGS Memory Relaxation
-During Hebbian updates, the manifold enters a state of high-dimensional tension. NexusDB uses a **Limited-memory Broyden–Fletcher–Goldfarb–Shanno (L-BFGS)** solver written in pure Rust to recalculate the equilibrium state. This Quasi-Newton method allows for real-time graph re-wiring by approximating the Hessian matrix with minimal memory overhead ($O(m \cdot N)$ where $m$ is small).
-
-### 3.3 Spherical K-means++ & Adaptive Temperature
-Clustering within the manifold uses **Spherical K-means++**, where centroids are normalized after each iteration to maintain angular integrity. **Soft Membership** is calculated via a Softmax function with **Adaptive Temperature $\tau$**:
-$$\tau = \text{clamp}(\sigma_{embeddings} \cdot 2.0, 0.2, 1.0)$$
-- **Sharp Boundaries ($\tau \to 0.2$)**: For highly specific domains (e.g., cardiovascular surgery).
-- **Smooth Boundaries ($\tau \to 1.0$)**: For cross-disciplinary domains (e.g., ESG compliance).
-
----
-
-## 4. Universal Portability: The .nxm (Nexus Memory) Format
-
-The `.nxm` file is a self-contained, binary Knowledge Cartridge designed for zero-latency deployment on edge devices and SLMs (Small Language Models).
-
-- **Memory Mapping (mmap)**: The kernel maps the `.nxm` file directly into the address space. Retrieval requires zero copy operations, and the RAM footprint is limited to the active pages being queried.
-- **Product Quantization (PQ)**: Vectors are compressed from 32-bit floats to quantized 4-bit codes, reducing disk and memory usage by 95% while maintaining 98%+ retrieval accuracy.
-- **Integrity & Security**: Every `.nxm` cartridge is sealed with a **SHA-256 integrity hash** and supports optional AES-256 encryption at rest.
-
----
-
-## 5. Performance: The "Brutal Test" Benchmarks
-
-Validated against a corpus of **11 Italian Legal Codes** (~3,167 pages, 66 MB PDF) converted into 10,708 chunks:
-
-| Metric | Performance | Detail |
-| :--- | :--- | :--- |
-| **Retrieval Latency** | < 15ms | Optimized Rust + HNSW |
-| **Precision (Top-5)** | 100% | Cross-code verification (10/10 queries) |
-| **Cold Start** | < 1s | Instant .nxm de-serialization |
-| **Skill Density** | ~1.4 KB / page | ZSTD + PQ Compression |
-
----
-
-## 6. Strategic Advantage: The Cognitive Flywheel
-
-NexusDB creates a self-improving loop that outperforms static cloud providers:
-1. **Hebbian Interaction Data**: User queries refine the database topology (LTP).
-2. **Fine-Tuning Loop**: The reinforced connections provide high-quality "Positive Pairs" for training in-house embedding models (e.g., Nemotron-based Fine-tuning).
-3. **Continuous Evolution**: The model becomes increasingly specialized to the specific nuances of the user's domain, creating an architectural lock-in based on earned cognitive value rather than proprietary silos.
-
----
-
-## 7. Strategic Roadmap
-
-- **Phase I (MVP)**: Rust-native engine, `.nxm` format, Hybrid Search (HNSW + BM25).
-- **Phase II (Plasticity)**: Asynchronous Hebbian Learning, L-BFGS graph relaxation.
-- **Phase III (Ecalability)**: Semantic Sharding, Product Quantization, multi-node architecture.
-- **Phase IV (AGI Enabler)**: DNA-Φ Phase alignment, local ONNX inference, autonomous agent integration.
-
----
-
-**NexusDB is not a warehouse. It is a brain.** It is the connective tissue that turns raw data into portable, evolving expertise.
-
-© 2025-2026 xQuantumTech. All rights reserved.
-Lead Developer: **Maurizio Tarricone**
+© 2026 X Quantum Tech FZE LLC.
